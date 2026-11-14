@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+@import '@m3ui-vue/m3ui-vue/theme';
+@import '@m3ui-vue/m3ui-vue/palettes'; /* optional — 40 color palettes */
+@import '@m3ui-vue/m3ui-vue/styles';   /* component transitions & animations */
+@import 'material-symbols/outlined.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';

@@ -1,0 +1,17 @@
+services:
+
+  backend:
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    restart: always
+    environment:
+      DEBUG: "False"
+
+  frontend:
+    build:
+      context: ./frontend
+      target: production
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: always

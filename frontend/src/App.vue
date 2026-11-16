@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { MAppLayout, MContainer, MNavigationRail, MIconButton, type NavRailItem } from '@m3ui-vue/m3ui-vue'
+import { MFab, type NavRailItem, MNavigationSuite } from '@m3ui-vue/m3ui-vue'
 import { RouterView } from 'vue-router';
-
+import { useFabStore } from '@/stores/fab'
 const items: NavRailItem[] = [
   {
     label: 'Dashboard',
@@ -19,30 +19,28 @@ const items: NavRailItem[] = [
 ]
 
 const active = ref(items[0]!.value)
-const expanded = ref(false)
+
+const fab = useFabStore()
+const onFabClick = () => fab.action?.()
 </script>
 
 <template>
-  <MAppLayout>
-    <template #drawer>
-      <MNavigationRail
-        :items="items"
-        :expanded="expanded"
-        v-model="active"
-      >
-          <template #fab>
-            <MIconButton
-              :icon="expanded ? 'left_panel_close' : 'left_panel_open'"
-              :label="expanded ? 'Collapse' : 'Expand'"
-              @click="expanded = !expanded"
-            />
-          </template>
-      </MNavigationRail>
-    </template>
-    <MContainer>
+  <MNavigationSuite
+    v-model="active"
+    :items="items"
+    class="h-dvh"
+  >
+    <main class="p-4">
       <RouterView />
-    </MContainer>
-  </MAppLayout>
+    </main>
+
+    <template #fab v-if="fab.isVisible">
+      <MFab
+        :icon="fab.icon"
+        @click="onFabClick"
+      />
+    </template>
+  </MNavigationSuite>
 </template>
 
 <style scoped></style>

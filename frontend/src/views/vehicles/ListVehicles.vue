@@ -3,25 +3,32 @@ import { MChip, MEmptyState, MList, MListItem, MLoadingIndicator, MResult, MTitl
 import { FuelType } from '@/stores/vehicle';
 import { useQuery } from '@tanstack/vue-query';
 import { vehicleApis } from '@/services/vehicles';
+import { useFabStore } from '@/stores/fab';
+import { useRouter } from 'vue-router';
+import { onMounted, onUnmounted } from 'vue';
 
 const { data, isFetching, isError } = useQuery({
   queryKey: ['vehicles'],
   queryFn: vehicleApis.getVehicles,
 });
+
+const fab = useFabStore()
+const router = useRouter()
+
+onMounted(() => fab.setFab({
+    icon: 'add',
+    label: 'Add vehicle',
+    action: () => router.push('/vehicles/new'),
+  })
+)
+
+onUnmounted(() => fab.clearFab())
 </script>
 
 <template>
-  <MFlex MFlex justify="between">
-    <MTitle>
-      Vehicles
-    </MTitle>
-    <MButton
-      variant="filled"
-      to="/vehicles/new"
-    >
-      New Vehicle
-    </MButton>
-  </MFlex>
+  <MTitle>
+    Vehicles
+  </MTitle>
   <MLoadingIndicator
     v-if="isFetching"
   />

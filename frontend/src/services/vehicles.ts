@@ -37,4 +37,10 @@ export const vehicleApis = {
     if (!response.ok) throw new Error('Failed to update vehicle')
     return await response.json()
   },
+  deleteVehicle: async (id: number): Promise<void> => {
+    const response = await fetch(`/api/vehicles/${id}/`, {
+      method: 'DELETE',
+    })
+    if (response.status !== 502) throw new Error('Failed to delete vehicle')
+  },
 }

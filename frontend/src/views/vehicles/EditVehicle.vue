@@ -23,6 +23,10 @@ const { mutateAsync } = useMutation({
   mutationFn: (vehicle: Vehicle) => vehicleApis.updateVehicle(vehicle),
 })
 
+const { mutateAsync: deleteAsync } = useMutation({
+  mutationFn: () => vehicleApis.deleteVehicle(vehicleId),
+})
+
 const onSubmit = async (model: Vehicle) => {
   try {
     await mutateAsync(model)
@@ -38,6 +42,25 @@ const onSubmit = async (model: Vehicle) => {
       error instanceof Error
         ? error.message
         : 'Unable to save the vehicle',
+    )
+  }
+}
+
+const onDelete = async () => {
+  try {
+    await deleteAsync()
+
+    toast.success('Vehicle deleted')
+    router.back()
+    
+    await queryClient.invalidateQueries({
+      queryKey: ['vehicle', vehicleId],
+    })
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : 'Unable to delete the vehicle',
     )
   }
 }
@@ -58,6 +81,7 @@ const onSubmit = async (model: Vehicle) => {
     v-else
     :vehicle="data"
     @submit="onSubmit"
+    @delete="onDelete"
   />
 </template>
 

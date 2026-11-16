@@ -5,6 +5,7 @@ import type { Vehicle, VehicleScenario } from '@/stores/vehicle';
 import DistanceInput from './DistanceInput.vue';
 import type { Fuel } from '@/stores/fuel.ts';
 import { useDistanceCalculatorStore } from '@/stores/distance-calculator.ts';
+import type { CalculatorCard } from '@/models/calculator-card.ts';
 
 const props = defineProps({
   vehicles: {
@@ -18,16 +19,6 @@ const props = defineProps({
 });
 
 const store = useDistanceCalculatorStore();
-
-interface CalculatorCard {
-  key: number;
-  title: string;
-  data: {
-    key: number;
-    subtitle: string;
-    value: string;
-  }[]
-}
 
 const cards = computed(() => {
   const cards: CalculatorCard[] = [];

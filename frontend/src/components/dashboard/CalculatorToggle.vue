@@ -23,7 +23,7 @@ const options: CalculatorToggleOption[] = [
         title: 'Charging time',
         subtitle: 'Calculate charging time',
         icon: 'timer',
-        key: 'time'
+        key: 'recharge'
     }
 ]
 

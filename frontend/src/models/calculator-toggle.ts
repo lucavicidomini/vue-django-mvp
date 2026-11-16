@@ -1,4 +1,4 @@
-export type CalculatorToggleKey = 'distance' | 'time';
+export type CalculatorToggleKey = 'distance' | 'recharge';
 
 export interface CalculatorToggleOption {
     key: CalculatorToggleKey;

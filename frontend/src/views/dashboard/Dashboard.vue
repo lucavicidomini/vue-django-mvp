@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import type { CalculatorToggleKey } from '@/models/calculator-toggle';
 import DistanceCalculator from '@/components/distance-calculator/DistanceCalculator.vue';
 import CalculatorToggle from '@/components/dashboard/CalculatorToggle.vue';
+import RechargeCalculator from '@/components/recharge-calculator/RechargeCalculator.vue';
 
 const { data: vehicles} = useVehiclesQuery();
 const { data: fuels } = useFuelsQuery();
@@ -24,9 +25,11 @@ const calculatorSelected = ref<CalculatorToggleKey | undefined>();
     :vehicles="vehicles ?? []"
     :fuels="fuels ?? []"
   />
-  <div v-else-if="calculatorSelected === 'time'">
-    <div>Charging time calculator content goes here</div>
-  </div>
+  <RechargeCalculator
+    v-if="calculatorSelected === 'recharge'"
+    :vehicles="vehicles ?? []"
+    :fuels="fuels ?? []"
+  ></RechargeCalculator>
 </template>
 
 <style scoped></style>

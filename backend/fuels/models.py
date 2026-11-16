@@ -5,3 +5,4 @@ class Fuel(models.Model):
     name = models.CharField(max_length=100)
     price = models.FloatField()
     unit = models.CharField(max_length=5)
+    inverted = models.BooleanField()

@@ -1,19 +1,14 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import type { FuelType } from './fuel';
 
-export enum FuelType {
-  EV = 0,
-  Petrol = 1,
-  Gasoline = 2,
-  CNG = 3, // Compressed Natural Gas (Metano)
-  LPG = 4 // Liquefied Petroleum Gas (GPL)
-}
+export { FuelType } from './fuel';
 
 export interface Vehicle {
   id: number
   name: string
   usable_battery: number
-  fuel_type: number,
+  fuel_type: FuelType,
   scenarios?: VehicleScenario[]
 }
 

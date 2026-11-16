@@ -16,6 +16,12 @@ const items: NavRailItem[] = [
     value: 'vehicles',
     to: '/vehicles'
   },
+  {
+    label: 'Fuels',
+    icon: 'local_gas_station',
+    value: 'fuels',
+    to: '/fuels'
+  },
 ]
 
 const active = ref(items[0]!.value)

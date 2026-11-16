@@ -6,7 +6,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: () => import('../views/Dashboard.vue')
+      component: () => import('../views/dashboard/Dashboard.vue')
     },
     {
       path: '/vehicles',
@@ -22,7 +22,12 @@ const router = createRouter({
       path: '/vehicles/:id',
       name: 'Vehicles-edit',
       component: () => import('../views/vehicles/EditVehicle.vue')
-    }
+    },
+    {
+      path: '/fuels',
+      name: 'Fuels',
+      component: () => import('../views/fuels/ListFuels.vue')
+    },
   ],
 })
 

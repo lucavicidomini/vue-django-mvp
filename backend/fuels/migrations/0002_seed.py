@@ -5,11 +5,11 @@ from django.db import migrations
 def seed_fuels(apps, schema_editor):
     Fuel = apps.get_model('fuels', 'Fuel')
     Fuel.objects.using(schema_editor.connection.alias).bulk_create([
-        Fuel(id=0, name='Electric', price=1, unit='kWh'),
-        Fuel(id=1, name='Petrol', price=1, unit='L'),
-        Fuel(id=2, name='Gasoline', price=1, unit='L'),
-        Fuel(id=3, name='CNG', price=1, unit='kg'),
-        Fuel(id=4, name='LPG', price=1, unit='m³'),
+        Fuel(id=0, name='Electric', price=1, unit='kWh', inverted=True),
+        Fuel(id=1, name='Petrol', price=1, unit='L', inverted=False),
+        Fuel(id=2, name='Gasoline', price=1, unit='L', inverted=False),
+        Fuel(id=3, name='CNG', price=1, unit='kg', inverted=False),
+        Fuel(id=4, name='LPG', price=1, unit='m³', inverted=False),
     ])
 
 class Migration(migrations.Migration):

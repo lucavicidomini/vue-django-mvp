@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/vue-query'
-
 import type { Vehicle } from '@/stores/vehicle'
 
 export const vehicleApis = {

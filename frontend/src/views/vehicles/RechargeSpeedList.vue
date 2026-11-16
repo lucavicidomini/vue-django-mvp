@@ -53,8 +53,12 @@ const open = computed(() => !!selectedItem.value)
   <MDialog v-model="open" title="Recharge speed" :closable="false">
     <MGrid v-if="selectedItem" class="gap-4" :cols="2" :sm="1">
       <MTextField v-model="selectedItem.name" required label="Name" />
-      <MTextField v-model="selectedItem.gross_speed" required label="Gross Speed" />
-      <MTextField v-model="selectedItem.net_speed" required label="Net Speed" />
+      <MTextField v-model="selectedItem.gross_speed" required label="Gross Speed">
+        <template #trailing>kW</template>
+      </MTextField>
+      <MTextField v-model="selectedItem.net_speed" required label="Net Speed">
+        <template #trailing>kW</template>
+      </MTextField>
     </MGrid>
     <template #actions>
       <MButton variant="text" @click="selectedItem = null">Cancel</MButton>
@@ -76,7 +80,7 @@ const open = computed(() => !!selectedItem.value)
         v-for="scenario in rows"
         :key="scenario._key"
         :title="scenario.name"
-        :subtitle="scenario.net_speed?.toString()"
+        :subtitle="scenario.net_speed?.toString() + ' kW'"
         @click="editItem(scenario)"
         class="bg-surface-container-lowest"
       ></MListItem>

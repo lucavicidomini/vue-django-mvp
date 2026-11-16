@@ -30,7 +30,9 @@ const sliderValue = computed(() => Math.min(Math.max(props.modelValue, 1), 1000)
         type="number"
         :model-value="modelValue"
         @update:model-value="$emit('update:modelValue', $event)"
-      />
+      >
+        <template #trailing>km</template>
+      </MTextField>
       <MSlider
         :min="1"
         :max="1000"

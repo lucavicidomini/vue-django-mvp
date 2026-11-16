@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { FuelType, type Vehicle, type VehicleRechargeSpeed, type VehicleScenario } from '@/stores/vehicle';
 import { MFlex, MConfirmDialog, MButton, MNumberField, MSelect, MTextField, MBox, MGrid } from '@m3ui-vue/m3ui-vue';
-import { reactive, ref, type PropType } from 'vue';
+import { computed, reactive, ref, type PropType } from 'vue';
 import { useRouter } from 'vue-router';
 import ScenarioList from './ScenarioList.vue';
 import RechargeSpeedList from './RechargeSpeedList.vue';
+import type { Fuel } from '@/stores/fuel.ts';
 
 const router = useRouter()
 
@@ -13,15 +14,25 @@ const props = defineProps({
     type: Object as PropType<Vehicle>,
     required: false,
   },
+  fuels: {
+    type: Array as PropType<Fuel[]>,
+    required: false,
+  },
 });
 const emit = defineEmits(['delete', 'submit'])
 const vehicle = props.vehicle ?? { id: 0, name: '', fuel_type: FuelType.EV, usable_battery: 0 } as Vehicle
 const form = reactive<Vehicle>({ ... vehicle})
 const open = ref(false)
 
-const fuelTypes = Object.entries(FuelType)
-  .filter(([, value]) => typeof value === 'number')
-  .map(([key, value]) => ({ label: key, value }));
+const fuelTypes = computed(() => (props.fuels ?? []).map(fuel => ({ label: fuel.name, value: fuel.id })))
+const selectedFuel = computed(() => props.fuels?.find(fuel => fuel.id === form.fuel_type))
+const consumptionUnit = computed(() => {
+  const fuel = selectedFuel.value;
+  if (!fuel?.unit) {
+    return undefined;
+  }
+  return fuel.inverted ? `${fuel.unit}/100km` : `km/${fuel.unit}`
+})
 
 const onUpdateScenarios = (scenarios: VehicleScenario[]) => {
   form.scenarios = scenarios
@@ -68,7 +79,7 @@ const onDelete = () => {
     />
     <MGrid :cols="1" :sm="2">
       <MBox surface="container" rounded="xl" class="p-4">
-        <ScenarioList :scenarios="form.scenarios" @update="onUpdateScenarios"></ScenarioList>
+        <ScenarioList :scenarios="form.scenarios" :unit="consumptionUnit" @update="onUpdateScenarios"></ScenarioList>
       </MBox>
       <MBox surface="container" rounded="xl" class="p-4">
         <RechargeSpeedList :recharge_speeds="form.recharge_speeds" @update="onUpdateRechargeSpeeds"></RechargeSpeedList>

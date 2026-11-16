@@ -60,7 +60,9 @@ watch(() => props.modelValue, (newValue) => {
         v-model="fromValue"
         @update:model-value="onUpdateFrom"
         :error="fromError"
-      />
+      >
+        <template #trailing>%</template>
+      </MTextField>
       <MSlider
         :min="0"
         :max="100"
@@ -75,7 +77,9 @@ watch(() => props.modelValue, (newValue) => {
         v-model="toValue"
         @update:model-value="onUpdateTo"
         :error="toError"
-      />
+      >
+        <template #trailing>%</template>
+      </MTextField>
     </MFlex>
   </MBox>
 </template>

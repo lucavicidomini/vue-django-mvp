@@ -8,6 +8,10 @@ const props = defineProps({
     type: Array as PropType<VehicleScenario[]>,
     required: false,
   },
+  unit: {
+    type: String,
+    required: false,
+  },
 });
 
 interface VehicleScenarioItem extends VehicleScenario {
@@ -53,7 +57,9 @@ const open = computed(() => !!selectedScenario.value)
   <MDialog v-model="open" title="Consumption scenario" :closable="false">
     <MGrid v-if="selectedScenario" class="gap-4" :cols="2" :sm="1">
       <MTextField v-model="selectedScenario.name" required label="Name" />
-      <MTextField v-model="selectedScenario.consumption" required label="Consumption" />
+      <MTextField v-model="selectedScenario.consumption" required label="Consumption">
+        <template #trailing>{{ props.unit }}</template>
+      </MTextField>
     </MGrid>
     <template #actions>
       <MButton variant="text" @click="selectedScenario = null">Cancel</MButton>
@@ -75,7 +81,7 @@ const open = computed(() => !!selectedScenario.value)
         v-for="scenario in rows"
         :key="scenario._key"
         :title="scenario.name"
-        :subtitle="scenario.consumption?.toString()"
+        :subtitle="scenario.consumption?.toString() + (props.unit ? ` ${props.unit}` : '')"
         @click="editScenario(scenario)"
         class="bg-surface-container-lowest"
       ></MListItem>

@@ -6,6 +6,7 @@ import { vehicleApis } from '@/services/vehicles';
 import { useRoute, useRouter } from 'vue-router';
 
 import VehicleForm from './VehicleForm.vue';
+import { useFuelsQuery } from '@/services/fuels.ts';
 
 const route = useRoute()
 const router = useRouter()
@@ -18,6 +19,8 @@ const { data, isFetching } = useQuery({
   queryKey: ['vehicle', vehicleId],
   queryFn: () => vehicleApis.getVehicle(vehicleId),
 })
+
+const { data: fuels } = useFuelsQuery();
 
 const { mutateAsync } = useMutation({
   mutationFn: (vehicle: Vehicle) => vehicleApis.updateVehicle(vehicle),
@@ -80,6 +83,7 @@ const onDelete = async () => {
   <VehicleForm
     v-else
     :vehicle="data"
+    :fuels="fuels"
     @submit="onSubmit"
     @delete="onDelete"
   />

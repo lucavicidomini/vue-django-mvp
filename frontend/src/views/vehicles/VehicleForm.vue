@@ -26,6 +26,8 @@ const open = ref(false)
 
 const fuelTypes = computed(() => (props.fuels ?? []).map(fuel => ({ label: fuel.name, value: fuel.id })))
 const selectedFuel = computed(() => props.fuels?.find(fuel => fuel.id === form.fuel_type))
+const isEv = computed(() => selectedFuel.value?.id === FuelType.EV)
+const capacityLabel = computed(() => isEv.value ? `Usable Battery (${selectedFuel.value?.unit})` : `Tank capacity (${selectedFuel.value?.unit})`)
 const consumptionUnit = computed(() => {
   const fuel = selectedFuel.value;
   if (!fuel?.unit) {
@@ -73,15 +75,16 @@ const onDelete = () => {
     />
     <MNumberField
       v-model="form.usable_battery"
-      :label="form.fuel_type === FuelType.EV ? 'Usable Battery (kWh)' : 'Tank capacity (L)'" variant="outlined"
+      variant="outlined"
+      :label="capacityLabel"
       :required="true"
       :stepper="false"
     />
-    <MGrid :cols="1" :sm="2">
+    <MGrid :cols="1" :sm="isEv ? 2 : 1">
       <MBox surface="container" rounded="xl" class="p-4">
         <ScenarioList :scenarios="form.scenarios" :unit="consumptionUnit" @update="onUpdateScenarios"></ScenarioList>
       </MBox>
-      <MBox surface="container" rounded="xl" class="p-4">
+      <MBox v-if="isEv" surface="container" rounded="xl" class="p-4">
         <RechargeSpeedList :recharge_speeds="form.recharge_speeds" @update="onUpdateRechargeSpeeds"></RechargeSpeedList>
       </MBox>
     </MGrid>

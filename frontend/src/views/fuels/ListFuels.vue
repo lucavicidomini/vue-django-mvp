@@ -22,7 +22,6 @@ const invertedOptions = computed<SegmentedOption[]>(() => [
 ]);
 
 const saveselectedFuel = async () => {
-  console.log(selectedFuel.value)
   const fuel = selectedFuel.value as Fuel;
   try {
     await mutateAsync(fuel)

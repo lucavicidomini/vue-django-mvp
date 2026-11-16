@@ -37,7 +37,7 @@ def sync_vehicle_scenarios(vehicle, data):
 def vehicles_list(request):
     if request.method == 'GET':
         vehicles = Vehicle.objects.all()
-        serializer = VehicleSerializer(vehicles, many=True)
+        serializer = VehicleDetailSerializer(vehicles, many=True)
         return JsonResponse(serializer.data, safe=False)
     elif request.method == 'POST':
         data = JSONParser().parse(request)

@@ -2,7 +2,7 @@
 import { MCard, MFlex, MGrid } from '@m3ui-vue/m3ui-vue';
 import RechargeInput from './RechargeInput.vue';
 import { computed } from 'vue';
-import type { Vehicle, VehicleScenario } from '@/stores/vehicle';
+import type { Vehicle, VehicleRechargeSpeed, VehicleScenario } from '@/stores/vehicle';
 import { FuelType, type Fuel } from '@/stores/fuel.ts';
 import { useRechargeCalculatorStore } from '@/stores/recharge-calculator';
 import type { CalculatorCard } from '@/models/calculator-card';
@@ -29,24 +29,25 @@ const cards = computed(() => {
     return [];
   }
   const cards: CalculatorCard[] = [];
+  const evCost = evFuel.value;
+  const [from, to] = store.value;
+  const percentage = (to - from) / 100.0;
   for (const vehicle of evVehicles.value) {
-    if (!vehicle.scenarios?.length) {
+    if (!vehicle.recharge_speeds?.length) {
       continue;
     }
+    const amount = vehicle.usable_battery * percentage
     const card: CalculatorCard = {
       key: vehicle.id,
       title: vehicle.name,
       data: []
     };
-    for (const scenario of vehicle.scenarios) {
-      const fuel = getFuelFor(vehicle);
-      if (fuel) {
-        card.data.push({
-          key: scenario.id,
-          subtitle: scenario.name,
-          value: getCostFor(scenario, fuel)
-        });
-      }
+    for (const rechargeSpeed of vehicle.recharge_speeds) {
+      card.data.push({
+        key: rechargeSpeed.id,
+        subtitle: rechargeSpeed.name,
+        value: getDurationFor(rechargeSpeed, amount)
+      })
     }
     if (card.data.length) {
       cards.push(card);
@@ -55,12 +56,11 @@ const cards = computed(() => {
   return cards;
 })
 
-const getFuelFor = (vehicle: Vehicle) => {
-  return props.fuels.find(fuel => fuel.id === vehicle.fuel_type);
-}
-
-const getCostFor = (scenario: VehicleScenario, fuel: Fuel): string => {
-  return "n/a" // (store.distance / consumption * fuel.price).toFixed(2);
+const getDurationFor = (scenario: VehicleRechargeSpeed, amount: number): string => {
+  const minutes = Math.ceil(amount / scenario.net_speed * 60);
+  const hh = Math.trunc(minutes / 60);
+  const mm = minutes % 60;
+  return `${hh}h ${mm.toString().padStart(2, '0')}m`
 }
 
 </script>
@@ -81,7 +81,7 @@ const getCostFor = (scenario: VehicleScenario, fuel: Fuel): string => {
           >
             <MFlex justify="between" class="p-4">
               <div>{{ item.subtitle }}</div>
-              <div>{{ item.value }} €</div>
+              <div>{{ item.value }}</div>
             </MFlex>
           </MCard>
         </MGrid>

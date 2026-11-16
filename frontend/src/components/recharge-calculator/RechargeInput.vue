@@ -78,7 +78,6 @@ watch(() => props.modelValue, (newValue) => {
       />
     </MFlex>
   </MBox>
-  {{ modelValue[0] }} - {{ modelValue[1] }}
 </template>
 
 <style scoped></style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type VehicleScenario } from '@/stores/vehicle';
 import {  MButton, MSection, MTextField, MList, MListItem, MDialog, MGrid } from '@m3ui-vue/m3ui-vue';
-import { computed, reactive, ref, watch, type PropType } from 'vue';
+import { computed, reactive, ref, type PropType } from 'vue';
 
 const props = defineProps({
   scenarios: {

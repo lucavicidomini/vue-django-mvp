@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { FuelType, type Vehicle, type VehicleScenario } from '@/stores/vehicle';
-import { MFlex, MConfirmDialog, MButton, MNumberField, MSelect, MTextField, MBox } from '@m3ui-vue/m3ui-vue';
+import { FuelType, type Vehicle, type VehicleRechargeSpeed, type VehicleScenario } from '@/stores/vehicle';
+import { MFlex, MConfirmDialog, MButton, MNumberField, MSelect, MTextField, MBox, MGrid } from '@m3ui-vue/m3ui-vue';
 import { reactive, ref, type PropType } from 'vue';
 import { useRouter } from 'vue-router';
 import ScenarioList from './ScenarioList.vue';
+import RechargeSpeedList from './RechargeSpeedList.vue';
 
 const router = useRouter()
 
@@ -22,8 +23,11 @@ const fuelTypes = Object.entries(FuelType)
   .filter(([, value]) => typeof value === 'number')
   .map(([key, value]) => ({ label: key, value }));
 
-const onUpdateScenarios = async (scenarios: VehicleScenario[]) => {
+const onUpdateScenarios = (scenarios: VehicleScenario[]) => {
   form.scenarios = scenarios
+}
+const onUpdateRechargeSpeeds = (recharge_speeds: VehicleRechargeSpeed[]) => {
+  form.recharge_speeds = recharge_speeds
 }
 
 const onDelete = () => {
@@ -62,9 +66,14 @@ const onDelete = () => {
       :required="true"
       :stepper="false"
     />
-    <MBox surface="container" rounded="xl" class="p-4">
-      <ScenarioList :scenarios="form.scenarios" @update="onUpdateScenarios"></ScenarioList>
-    </MBox>
+    <MGrid :cols="1" :sm="2">
+      <MBox surface="container" rounded="xl" class="p-4">
+        <ScenarioList :scenarios="form.scenarios" @update="onUpdateScenarios"></ScenarioList>
+      </MBox>
+      <MBox surface="container" rounded="xl" class="p-4">
+        <RechargeSpeedList :recharge_speeds="form.recharge_speeds" @update="onUpdateRechargeSpeeds"></RechargeSpeedList>
+      </MBox>
+    </MGrid>
     <MFlex class="gap-3" >
       <MButton @click="router.back()" variant="outlined">Cancel</MButton>
       <MButton v-if="vehicle.id !== 0" @click="open = true" color="error">Delete</MButton>

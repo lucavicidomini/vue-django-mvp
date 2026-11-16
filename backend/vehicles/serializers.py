@@ -6,6 +6,12 @@ class VehicleScenarioSerializer(serializers.ModelSerializer):
         model = VehicleScenario
         fields = '__all__'
 
+class VehicleScenarioSyncSerializer(VehicleScenarioSerializer):
+    id = serializers.IntegerField(min_value=0)
+
+    class Meta(VehicleScenarioSerializer.Meta):
+        fields = ['id', 'name', 'consumption']
+
 class VehicleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vehicle

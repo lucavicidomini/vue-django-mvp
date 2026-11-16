@@ -17,5 +17,6 @@ make local-createsuperuser
 ```
 
 Finally, run the server
+```
 make local
 ```

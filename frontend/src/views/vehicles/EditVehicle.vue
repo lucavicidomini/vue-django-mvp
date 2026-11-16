@@ -19,7 +19,7 @@ const { data, isFetching } = useQuery({
   queryFn: () => vehicleApis.getVehicle(vehicleId),
 })
 
-const { isError, mutateAsync } = useMutation({
+const { mutateAsync } = useMutation({
   mutationFn: (vehicle: Vehicle) => vehicleApis.updateVehicle(vehicle),
 })
 
@@ -49,10 +49,6 @@ const onSubmit = async (model: Vehicle) => {
   </MTitle>
   <MLoadingIndicator
     v-if="isFetching"
-  />
-  <MResult
-    v-else-if="isError"
-    status="error"
   />
   <MEmptyState
     v-else-if="!data"

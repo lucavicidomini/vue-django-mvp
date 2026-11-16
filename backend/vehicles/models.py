@@ -10,3 +10,9 @@ class VehicleScenario(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     consumption = models.FloatField()
+
+class VehicleRechargeSpeed(models.Model):
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    gross_speed = models.FloatField()
+    net_speed = models.FloatField()

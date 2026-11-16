@@ -1,9 +1,14 @@
 from rest_framework import serializers
-from vehicles.models import Vehicle, VehicleScenario, FUEL_TYPE_CHOICES
+from vehicles.models import Vehicle, VehicleScenario, VehicleRechargeSpeed, FUEL_TYPE_CHOICES
 
 class VehicleScenarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = VehicleScenario
+        fields = '__all__'
+
+class VehicleRechargeSpeedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VehicleRechargeSpeed
         fields = '__all__'
 
 class VehicleScenarioSyncSerializer(VehicleScenarioSerializer):
@@ -21,7 +26,10 @@ class VehicleDetailSerializer(VehicleSerializer):
     scenarios = VehicleScenarioSerializer(
         source='vehiclescenario_set', many=True, read_only=True
     )
+    recharge_speeds = VehicleRechargeSpeedSerializer(
+        source='vehiclerechargespeed_set', many=True, read_only=True
+    )
 
     class Meta(VehicleSerializer.Meta):
-        fields = ['id', 'name', 'usable_battery', 'fuel_type', 'scenarios']
+        fields = ['id', 'name', 'usable_battery', 'fuel_type', 'scenarios', 'recharge_speeds']
 

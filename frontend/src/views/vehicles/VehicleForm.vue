@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { FuelType, type Vehicle } from '@/stores/vehicle';
-import { MFlex, MConfirmDialog, MButton, MNumberField, MSelect, MTextField } from '@m3ui-vue/m3ui-vue';
+import { FuelType, type Vehicle, type VehicleScenario } from '@/stores/vehicle';
+import { MFlex, MConfirmDialog, MButton, MNumberField, MSelect, MTextField, MBox } from '@m3ui-vue/m3ui-vue';
 import { reactive, ref, type PropType } from 'vue';
 import { useRouter } from 'vue-router';
+import ScenarioList from './ScenarioList.vue';
 
 const router = useRouter()
 
@@ -20,6 +21,10 @@ const open = ref(false)
 const fuelTypes = Object.entries(FuelType)
   .filter(([, value]) => typeof value === 'number')
   .map(([key, value]) => ({ label: key, value }));
+
+const onUpdateScenarios = async (scenarios: VehicleScenario[]) => {
+  form.scenarios = scenarios
+}
 
 const onDelete = () => {
   open.value = false
@@ -57,6 +62,9 @@ const onDelete = () => {
       :required="true"
       :stepper="false"
     />
+    <MBox surface="container" rounded="xl" class="p-4">
+      <ScenarioList :scenarios="form.scenarios" @update="onUpdateScenarios"></ScenarioList>
+    </MBox>
     <MFlex class="gap-3" >
       <MButton @click="router.back()" variant="outlined">Cancel</MButton>
       <MButton v-if="vehicle.id !== 0" @click="open = true" color="error">Delete</MButton>

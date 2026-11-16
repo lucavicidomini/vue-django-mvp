@@ -13,7 +13,14 @@ export interface Vehicle {
   id: number
   name: string
   usable_battery: number
-  fuel_type: number
+  fuel_type: number,
+  scenarios?: VehicleScenario[]
+}
+
+export interface VehicleScenario {
+  id: number
+  name: string
+  consumption: number
 }
 
 export const useVehicleStore = defineStore('vehicles', () => {
@@ -25,9 +32,5 @@ export const useVehicleStore = defineStore('vehicles', () => {
 
   const isEmpty = computed(() => all.value.length === 0)
   
-  // function increment() {
-  //   count.value++
-  // }
-
   return { all, evs, isEmpty }
 })

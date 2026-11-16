@@ -10,28 +10,35 @@ from rest_framework.parsers import JSONParser
 from vehicles.models import Vehicle, VehicleScenario
 from vehicles.serializers import (
     VehicleSerializer, VehicleScenarioSerializer, VehicleDetailSerializer,
-    VehicleScenarioSyncSerializer,
+    VehicleScenarioSyncSerializer, VehicleRechargeSpeedSyncSerializer
 )
+
+def sync_related_entity(vehicle, related_set, serializer, label):
+    if not serializer.is_valid():
+        raise ValidationError({label: serializer.errors})
+
+    existing = {related.pk: related for related in related_set.all()}
+    related_ids = [item['id'] for item in serializer.validated_data if item['id'] != 0]
+    if len(related_ids) != len(set(related_ids)):
+        raise ValidationError({label: 'IDs must not be repeated.'})
+    if any(related_id not in existing for related_id in related_ids):
+        raise ValidationError({label: 'IDs must belong to this vehicle.'})
+
+    related_set.exclude(pk__in=related_ids).delete()
+    for related_data in serializer.validated_data:
+        related_id = related_data.pop('id')
+        if related_id == 0:
+            serializer.child.create({**related_data, 'vehicle': vehicle})
+        else:
+            serializer.child.update(existing[related_id], related_data)
 
 def sync_vehicle_scenarios(vehicle, data):
     serializer = VehicleScenarioSyncSerializer(data=data, many=True)
-    if not serializer.is_valid():
-        raise ValidationError({'scenarios': serializer.errors})
+    sync_related_entity(vehicle, vehicle.vehiclescenario_set, serializer, 'scenarios')
 
-    existing = {scenario.pk: scenario for scenario in vehicle.vehiclescenario_set.all()}
-    scenario_ids = [item['id'] for item in serializer.validated_data if item['id'] != 0]
-    if len(scenario_ids) != len(set(scenario_ids)):
-        raise ValidationError({'scenarios': 'Scenario IDs must not be repeated.'})
-    if any(scenario_id not in existing for scenario_id in scenario_ids):
-        raise ValidationError({'scenarios': 'Scenario IDs must belong to this vehicle.'})
-
-    vehicle.vehiclescenario_set.exclude(pk__in=scenario_ids).delete()
-    for scenario_data in serializer.validated_data:
-        scenario_id = scenario_data.pop('id')
-        if scenario_id == 0:
-            serializer.child.create({**scenario_data, 'vehicle': vehicle})
-        else:
-            serializer.child.update(existing[scenario_id], scenario_data)
+def sync_vehicle_recharge_speeds(vehicle, data):
+    serializer = VehicleRechargeSpeedSyncSerializer(data=data, many=True)
+    sync_related_entity(vehicle, vehicle.vehiclerechargespeed_set, serializer, 'recharge_speeds')
 
 @api_view(['GET', 'POST'])
 def vehicles_list(request):
@@ -47,6 +54,8 @@ def vehicles_list(request):
                 vehicle = serializer.save()
                 if 'scenarios' in data:
                     sync_vehicle_scenarios(vehicle, data['scenarios'])
+                if 'recharge_speeds' in data:
+                    sync_vehicle_recharge_speeds(vehicle, data['recharge_speeds'])
             return JsonResponse(serializer.data, status=201)
         return JsonResponse(serializer.errors, status=400)
 
@@ -68,44 +77,10 @@ def vehicle_detail(request, vehicle_pk):
                 vehicle = serializer.save()
                 if 'scenarios' in data:
                     sync_vehicle_scenarios(vehicle, data['scenarios'])
+                if 'recharge_speeds' in data:
+                    sync_vehicle_recharge_speeds(vehicle, data['recharge_speeds'])
             return JsonResponse(serializer.data, status=200)
         return JsonResponse(serializer.errors, status=400)
     elif request.method == 'DELETE':
         vehicle.delete()
         return JsonResponse({'message': 'Vehicle deleted'}, status=204)
-
-@api_view(['GET', 'POST'])
-def vehicle_scenarios_list(request, vehicle_pk):
-    if request.method == 'GET':
-        scenarios = VehicleScenario.objects.filter(vehicle_id=vehicle_pk)
-        serializer = VehicleScenarioSerializer(scenarios, many=True)
-        return JsonResponse(serializer.data, safe=False)
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        data['vehicle'] = vehicle_pk
-        serializer = VehicleScenarioSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-@api_view(['GET', 'PATCH', 'DELETE'])
-def vehicle_scenarios_detail(request, vehicle_pk, scenario_pk):
-    try:
-        scenario = VehicleScenario.objects.get(pk=scenario_pk)
-    except VehicleScenario.DoesNotExist:
-        return JsonResponse({'error': 'Vehicle Scenario not found'}, status=404)
-
-    if request.method == 'GET':
-        serializer = VehicleScenarioSerializer(scenario)
-        return JsonResponse(serializer.data, safe=False)
-    elif request.method == 'PATCH':
-        data = JSONParser().parse(request)
-        serializer = VehicleScenarioSerializer(scenario, data=data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=200)
-        return JsonResponse(serializer.errors, status=400)
-    elif request.method == 'DELETE':
-        scenario.delete()
-        return JsonResponse({'message': 'Vehicle Scenario deleted'}, status=204)

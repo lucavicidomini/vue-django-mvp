@@ -11,6 +11,12 @@ class VehicleRechargeSpeedSerializer(serializers.ModelSerializer):
         model = VehicleRechargeSpeed
         fields = '__all__'
 
+class VehicleRechargeSpeedSyncSerializer(VehicleRechargeSpeedSerializer):
+    id = serializers.IntegerField(min_value=0)
+
+    class Meta(VehicleRechargeSpeedSerializer.Meta):
+        fields = ['id', 'name', 'net_speed', 'gross_speed']
+
 class VehicleScenarioSyncSerializer(VehicleScenarioSerializer):
     id = serializers.IntegerField(min_value=0)
 

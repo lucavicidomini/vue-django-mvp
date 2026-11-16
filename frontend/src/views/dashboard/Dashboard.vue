@@ -1,21 +1,13 @@
 <script setup lang="ts">
-import { vehicleApis } from '@/services/vehicles';
-import { fuelApis } from '@/services/fuels';
+import { useVehiclesQuery } from '@/services/vehicles';
+import { useFuelsQuery } from '@/services/fuels';
 import { ref } from 'vue';
 import type { CalculatorToggleKey } from '@/models/calculator-toggle';
-import { useQuery } from '@tanstack/vue-query';
 import DistanceCalculator from '@/components/distance-calculator/DistanceCalculator.vue';
 import CalculatorToggle from '@/components/dashboard/CalculatorToggle.vue';
 
-const { data: vehicles, isFetching, isError } = useQuery({
-  queryKey: ['vehicles'],
-  queryFn: vehicleApis.getVehicles,
-});
-
-const { data: fuels, isFetching: isFetchingFuels, isError: isErrorFuels } = useQuery({
-  queryKey: ['fuels'],
-  queryFn: fuelApis.getFuels,
-});
+const { data: vehicles} = useVehiclesQuery();
+const { data: fuels } = useFuelsQuery();
 
 const calculatorSelected = ref<CalculatorToggleKey | undefined>();
 

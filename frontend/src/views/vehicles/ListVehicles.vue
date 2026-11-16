@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import { MChip, MEmptyState, MList, MListItem, MLoadingIndicator, MResult, MTitle, MFlex, MButton } from '@m3ui-vue/m3ui-vue';
+import { MChip, MEmptyState, MList, MListItem, MLoadingIndicator, MResult, MTitle, MFlex } from '@m3ui-vue/m3ui-vue';
 import { FuelType } from '@/stores/vehicle';
-import { useQuery } from '@tanstack/vue-query';
-import { vehicleApis } from '@/services/vehicles';
+import { useVehiclesQuery } from '@/services/vehicles';
 import { useFabStore } from '@/stores/fab';
 import { useRouter } from 'vue-router';
 import { onMounted, onUnmounted } from 'vue';
 
-const { data, isFetching, isError } = useQuery({
-  queryKey: ['vehicles'],
-  queryFn: vehicleApis.getVehicles,
-});
-
+const { data, isFetching, isError } = useVehiclesQuery();
 const fab = useFabStore()
 const router = useRouter()
 

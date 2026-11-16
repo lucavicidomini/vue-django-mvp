@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { MCard, MFlex, MGrid, MIcon } from '@m3ui-vue/m3ui-vue';
-import { computed, onMounted, ref } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
-import type { CalculatorToggleKey, CalculatorToggleOption } from '@/models/calculator-toggle';
+import { MCard, MFlex, MGrid } from '@m3ui-vue/m3ui-vue';
+import { computed } from 'vue';
 import type { Vehicle, VehicleScenario } from '@/stores/vehicle';
 import DistanceInput from './DistanceInput.vue';
 import type { Fuel } from '@/stores/fuel.ts';

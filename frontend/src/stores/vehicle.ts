@@ -1,5 +1,3 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
 import type { FuelType } from './fuel';
 
 export { FuelType } from './fuel';
@@ -18,14 +16,3 @@ export interface VehicleScenario {
   consumption: number
 }
 
-export const useVehicleStore = defineStore('vehicles', () => {
-  const all = ref<Vehicle[]>([
-    { name: 'Vehicle 1', id: 1, usable_battery: 80, fuel_type: 0 }
-  ])
-
-  const evs = computed(() => all.value.filter(v => v.fuel_type === 0))
-
-  const isEmpty = computed(() => all.value.length === 0)
-  
-  return { all, evs, isEmpty }
-})

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { vehicleApis } from '@/services/vehicles';
 import { MCard, MFlex, MGrid, MIcon } from '@m3ui-vue/m3ui-vue';
-import { onMounted, ref } from 'vue';
-import { useQuery } from '@tanstack/vue-query';
+import { onMounted } from 'vue';
 import type { CalculatorToggleKey, CalculatorToggleOption } from '@/models/calculator-toggle';
 
 const props = defineProps({

@@ -1,4 +1,5 @@
 import type { Fuel } from '@/stores/fuel'
+import { useQuery } from '@tanstack/vue-query'
 
 export const fuelApis = {
   getFuels: async (): Promise<Fuel[]> => {
@@ -42,3 +43,8 @@ export const fuelApis = {
     if (response.status !== 502) throw new Error('Failed to delete fuel')
   },
 }
+
+export const useFuelsQuery = () => useQuery<Fuel[]>({
+  queryKey: ['fuels'],
+  queryFn: fuelApis.getFuels,
+})

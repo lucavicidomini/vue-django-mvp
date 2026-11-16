@@ -1,4 +1,5 @@
 import type { Vehicle } from '@/stores/vehicle'
+import { useQuery } from '@tanstack/vue-query'
 
 export const vehicleApis = {
   getVehicles: async (): Promise<Vehicle[]> => {
@@ -42,3 +43,8 @@ export const vehicleApis = {
     if (response.status !== 502) throw new Error('Failed to delete vehicle')
   },
 }
+
+export const useVehiclesQuery = () => useQuery<Vehicle[]>({
+  queryKey: ['vehicles'],
+  queryFn: vehicleApis.getVehicles,
+})

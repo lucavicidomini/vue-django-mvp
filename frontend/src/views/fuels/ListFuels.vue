@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { MChip, MEmptyState, MTextField, MList, MListItem, MLoadingIndicator, MResult, MTitle, MFlex, MButton, MDialog, MGrid, useToast, MSegmentedButton, type SegmentedOption } from '@m3ui-vue/m3ui-vue';
 import { FuelType, type Fuel } from '@/stores/fuel';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
-import { fuelApis } from '@/services/fuels';
+import { useMutation, useQueryClient } from '@tanstack/vue-query';
+import { fuelApis, useFuelsQuery } from '@/services/fuels';
 import { computed, ref } from 'vue';
 
-const { data, isFetching, isError } = useQuery({
-  queryKey: ['fuels'],
-  queryFn: fuelApis.getFuels,
-});
+const { data, isFetching, isError } = useFuelsQuery();
 
 const { mutateAsync } = useMutation({
   mutationFn: (fuel: Fuel) => fuelApis.updateFuel(fuel),

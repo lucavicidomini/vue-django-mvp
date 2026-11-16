@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { MChip, MEmptyState, MTextField, MList, MListItem, MLoadingIndicator, MResult, MTitle, MFlex, MButton, MDialog, MGrid, useToast } from '@m3ui-vue/m3ui-vue';
+import { MChip, MEmptyState, MTextField, MList, MListItem, MLoadingIndicator, MResult, MTitle, MFlex, MButton, MDialog, MGrid, useToast, MSegmentedButton, type SegmentedOption } from '@m3ui-vue/m3ui-vue';
 import { FuelType, type Fuel } from '@/stores/fuel';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query';
 import { fuelApis } from '@/services/fuels';
@@ -18,6 +18,11 @@ const selectedFuel = ref<Fuel | null>(null)
 const open = computed(() => !!selectedFuel.value)
 const queryClient = useQueryClient()
 const toast = useToast()
+
+const invertedOptions = computed<SegmentedOption[]>(() => [
+  { label: `km/${selectedFuel.value?.unit}`, value: '0' },
+  { label: `${selectedFuel.value?.unit}/100km`, value: '1' },
+]);
 
 const saveselectedFuel = async () => {
   console.log(selectedFuel.value)
@@ -48,6 +53,11 @@ const saveselectedFuel = async () => {
         <MTextField v-model="selectedFuel.name" required label="Name" />
         <MTextField v-model="selectedFuel.price" required label="Price" />
         <MTextField v-model="selectedFuel.unit" required label="Unit" />
+        <MSegmentedButton
+          :model-value="selectedFuel.inverted ? '1' : '0'"
+          @update:model-value="selectedFuel.inverted = $event === '1'"
+          :options="invertedOptions"
+        ></MSegmentedButton>
       </MGrid>
       <template #actions>
         <MButton variant="text" @click="selectedFuel = null">Cancel</MButton>

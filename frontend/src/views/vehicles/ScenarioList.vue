@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type VehicleScenario } from '@/stores/vehicle';
 import {  MButton, MSection, MTextField, MList, MListItem, MDialog, MGrid } from '@m3ui-vue/m3ui-vue';
-import { reactive, ref, watch, type PropType } from 'vue';
+import { computed, reactive, ref, watch, type PropType } from 'vue';
 
 const props = defineProps({
   scenarios: {
@@ -17,7 +17,6 @@ interface VehicleScenarioItem extends VehicleScenario {
 const emit = defineEmits(['update'])
 const scenarios = (props.scenarios ?? [] as VehicleScenario[]).map((scenario, i) => ({ ...scenario, _key: i }))
 const rows = reactive<VehicleScenarioItem[]>([ ... scenarios ])
-const open = ref(false)
 
 const emptyScenario: () => VehicleScenarioItem = () => ({ _key: rows.length, id: 0, name: '', consumption: 0 })
 const selectedScenario = ref<VehicleScenarioItem | null>(null)
@@ -46,7 +45,7 @@ const deleteSelectedScenario = () => {
   }
 }
 
-watch(selectedScenario, () => open.value = !!selectedScenario.value)
+const open = computed(() => !!selectedScenario.value)
 
 </script>
 

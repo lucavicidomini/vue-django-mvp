@@ -11,4 +11,5 @@ export interface Fuel {
   name: string
   price: number,
   unit: string,
+  inverted: boolean,
 }

@@ -1,22 +1,15 @@
 # EVCompanion - Vue.js + Django MVP
 
-## Local env
-
-Remember to activate the virtual env:
+## Developing and running on docker
 
 ```
-source .venv/bin/activate
+make dev
 ```
 
-The very first time you run the app, run:
+After containers are up, the first time run:
 
 ```
-pip install -r backend/requirements.txt
-make local-migrate
-make local-createsuperuser
+make migrate
 ```
 
-Finally, run the server
-```
-make local
-```
+Navigate to `http://localhost:5173/`

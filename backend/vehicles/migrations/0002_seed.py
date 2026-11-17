@@ -6,7 +6,8 @@ def seed_vehicles(apps, schema_editor):
     Vehicle = apps.get_model('vehicles', 'Vehicle')
     Vehicle.objects.using(schema_editor.connection.alias).bulk_create([
         Vehicle(name='Inster', usable_battery=46, fuel_type=0),
-        Vehicle(name='118D', usable_battery=60, fuel_type=2),
+        Vehicle(name='118D', usable_battery=49, fuel_type=2),
+        Vehicle(name='Panda', usable_battery=13, fuel_type=3),
     ])
 
 def seed_scenarios(apps, schema_editor):
@@ -15,6 +16,7 @@ def seed_scenarios(apps, schema_editor):
         VehicleScenario(name='Average', consumption=16.8, vehicle_id=1),
         VehicleScenario(name='Highway', consumption=20.0, vehicle_id=1),
         VehicleScenario(name='Average', consumption=16.5, vehicle_id=2),
+        VehicleScenario(name='Average', consumption=25.0, vehicle_id=3),
     ])
 
 class Migration(migrations.Migration):

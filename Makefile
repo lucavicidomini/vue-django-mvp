@@ -1,12 +1,3 @@
-local:
-	python backend/manage.py runserver 8001
-
-local-migrate:
-	python backend/manage.py migrate
-
-local-createsuperuser:
-	python backend/manage.py createsuperuser
-
 dev:
 	docker compose -f compose.yaml -f compose.dev.yaml up --build -d
 

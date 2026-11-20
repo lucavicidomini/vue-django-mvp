@@ -6,6 +6,7 @@ import { vehicleApis } from '@/services/vehicles';
 import { useRouter } from 'vue-router';
 
 import VehicleForm from './VehicleForm.vue';
+import { useFuelsQuery } from '@/services/fuels.ts';
 
 const router = useRouter()
 const queryClient = useQueryClient()
@@ -14,6 +15,8 @@ const toast = useToast()
 const { mutateAsync } = useMutation({
   mutationFn: (vehicle: Vehicle) => vehicleApis.createVehicle(vehicle),
 })
+
+const { data: fuels } = useFuelsQuery();
 
 const onSubmit = async (model: Vehicle) => {
   try {
@@ -41,7 +44,10 @@ const onSubmit = async (model: Vehicle) => {
       Add new vehicle
     </MTitle>
   </MFlex>
-  <VehicleForm @submit="onSubmit"></VehicleForm>
+  <VehicleForm
+    @submit="onSubmit"
+    :fuels="fuels"
+  ></VehicleForm>
 </template>
 
 <style scoped></style>
